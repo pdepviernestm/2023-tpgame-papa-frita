@@ -1,8 +1,242 @@
 import wollok.game.*
-import pepita.*
 
-program juego {
-	game.title("Juego Base")
-	game.addVisual(pepita)
-	game.start()
+object skin {
+	
+	var property skin
+	var property sonidos = [1..10].flatten()
+	var property enemigos = ["enemigo.png", "enemigos2.png"]
+	var property monigote = "monigote.png"
+	var property fondo = "fondo.png"
+	var property mensajeMuerte = "mensajeMuerte.png"
+	var property sonidoMuerte = "sonidoMuerte.mp3"
+	
+	method setSkin(nombre) {
+		skin = nombre + "/"
+		sonidos = sonidos.map({e => (skin + "/sonidos/" + e + ".mp3")})
+		enemigos = enemigos.map({e => (skin  + e)})
+		monigote = skin + monigote
+		fondo = skin + fondo
+		mensajeMuerte = skin + mensajeMuerte
+		sonidoMuerte = skin + "/sonidos/" + sonidoMuerte		
+	}
+	
+}
+
+class bloque {
+	
+	var x = 0
+	var y = 0
+	var position = game.at(x,y)
+	
+	method position() = position
+	
+	method image() = "irrompible.jpg"
+	
+	method subir() {position = position.up(1)} 
+	
+}
+
+object tablero {
+	
+	var bloques = []
+	var columna = 0
+	var fila = 0
+	
+	method crearBloque() {
+		
+		if (columna%2 != 0 and fila%2 != 0) {
+			bloques.add(new bloque(x = fila, y = columna))
+		}
+		columna += 1
+		
+		if (columna == 15) {
+			columna = 0
+			fila += 1
+		}
+	}
+	
+	method crearBloques() {
+		225.times({e => self.crearBloque()})
+	}
+	 
+	 
+	 
+	method vertical(a,b) {
+		bloques.add(new bloque(x = a, y = b))
+		
+	}
+	method horizontal(a,b) {
+		bloques.add(new bloque(x = a, y = b))
+		
+	}
+	
+	 
+	method borde() {
+		var b= 0
+		var a= 0
+		15.times({e => self.vertical(-1,b)
+			b+=1
+		})
+		b=0
+		15.times({e => self.vertical(15,b)
+			b+=1
+		})
+		
+		15.times({e => self.horizontal(a,-1)
+			a+=1
+		})
+		a=0
+		15.times({e => self.horizontal(a,15)
+			a+=1
+		})
+		
+		
+	}
+	
+	method bloques() = bloques
+	
+}
+
+object mensajeDeMuerte {
+	
+	method position() = game.origin()
+	
+	method image() = skin.mensajeMuerte()
+	
+}
+
+object monigote {
+	
+	var position = game.origin()
+	var property vivo= true
+	method image() = skin.monigote()
+	method position() = position
+	
+	method sonido() = skin.sonidos().anyOne()
+	
+	method noBloque(posicion) {
+		return not(game.getObjectsIn(posicion).contains("bloque"))
+	}
+	
+	method arriba() {
+		if (self.noBloque(position.up(1))) {
+			position = position.up(1)
+			if(vivo){
+			game.sound(self.sonido()).play()		
+			}
+		}
+	} 
+	method abajo() {
+		if (game.getObjectsIn(position.down(1)).isEmpty()) {
+			position = position.down(1)		
+			game.sound(self.sonido()).play()	
+		}
+	} 
+	method izquierda() {
+		if (game.getObjectsIn(position.left(1)).isEmpty()) {
+			position = position.left(1)		
+			game.sound(self.sonido()).play()		
+		}
+	} 
+	method derecha() {
+		if (game.getObjectsIn(position.right(1)).isEmpty()) {
+			position = position.right(1)	
+			game.sound(self.sonido()).play()			
+		}
+	} 
+	
+	method morir() {
+		game.removeVisual(self)
+		game.addVisual(mensajeDeMuerte)
+		game.sound(skin.sonidoMuerte()).play()
+		vivo = false
+		
+
+	}
+	
+}
+
+class malo {
+		
+	var position = self.asignarPosicion()
+	var imagen = skin.enemigos().anyOne()
+	const movimientos = [{position.up(1)}, {position.down(1)}, {position.right(1)}, {position.left(1)}]
+	var movimiento = movimientos.anyOne()
+	
+	method image() = imagen
+	
+	method position() = position
+	
+	method asignarPosicion() {
+		
+		position = game.at(4.randomUpTo(13), 4.randomUpTo(13))
+		
+		// Le meti esta recurrencia para que no termine habiendo enemigos superponiendose
+		if (not(game.getObjectsIn(position).isEmpty())) {
+			position = self.asignarPosicion()
+		}
+		
+		return position
+	}
+	
+	method mover() {
+		movimiento = movimientos.anyOne().apply()
+		
+		// Solo se mueve en una direccion en caso de que en esa direccion no haya nada o
+		// este el personaje
+		if (game.getObjectsIn(movimiento).isEmpty() || game.getObjectsIn(movimiento) == [monigote]) {
+			position = movimiento
+		} 
+	}
+	
+}
+
+object jogo {
+  	var malos = []
+	
+	method opciones() {
+		game.width(15)
+  		game.height(15)
+  		game.cellSize(60)
+  		game.title("milei en el banco central simulator")
+  		game.boardGround(skin.fondo())
+	}
+	
+	method generarLayout() {
+  		tablero.crearBloques()
+  		tablero.borde()
+  		tablero.bloques().forEach({b => game.addVisual(b)})		
+	}
+	
+	method iniciarNivel() {
+  		15.times({e => malos.add(new malo()) })
+  		malos.forEach({b => game.addVisual(b)})
+  		game.addVisualCharacter(monigote)
+	}
+	
+	method malos() = malos
+	
+}
+
+program bombita {
+	
+	//skin.setSkin("suisei")
+  	skin.setSkin("milei")
+	jogo.opciones()
+  	
+  	jogo.generarLayout()
+  	jogo.iniciarNivel()
+  	
+  	
+  	keyboard.w().onPressDo({monigote.arriba()})
+  	keyboard.s().onPressDo({monigote.abajo()})
+  	keyboard.a().onPressDo({monigote.izquierda()})
+  	keyboard.d().onPressDo({monigote.derecha()})
+  		
+  	
+  	
+  	game.whenCollideDo(monigote, {e => monigote.morir()})
+  	game.onTick(250, "mover malos", { jogo.malos().forEach({e => e.mover()}) })
+  	game.start()
+
 }
