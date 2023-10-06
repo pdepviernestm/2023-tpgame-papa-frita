@@ -107,9 +107,11 @@ object mensajeDeMuerte {
 
 object monigote {
 	
-	var position = game.origin()
+	var property position = game.origin()
 	var property vivo= true
+	var property posicionVieja= position
 	method image() = skin.monigote()
+	
 	method position() = position
 	
 	method sonido() = skin.sonidos().anyOne()
@@ -120,26 +122,29 @@ object monigote {
 	
 	method arriba() {
 		if (self.noBloque(position.up(1))) {
+			posicionVieja= position
 			position = position.up(1)
-			if(vivo){
 			game.sound(self.sonido()).play()		
-			}
+			
 		}
 	} 
 	method abajo() {
 		if (game.getObjectsIn(position.down(1)).isEmpty()) {
+			posicionVieja= position
 			position = position.down(1)		
 			game.sound(self.sonido()).play()	
 		}
 	} 
 	method izquierda() {
 		if (game.getObjectsIn(position.left(1)).isEmpty()) {
+			posicionVieja= position
 			position = position.left(1)		
 			game.sound(self.sonido()).play()		
 		}
 	} 
 	method derecha() {
 		if (game.getObjectsIn(position.right(1)).isEmpty()) {
+			posicionVieja= position
 			position = position.right(1)	
 			game.sound(self.sonido()).play()			
 		}
@@ -234,8 +239,8 @@ program bombita {
   	keyboard.d().onPressDo({monigote.derecha()})
   		
   	
-  	
-  	game.whenCollideDo(monigote, {e => monigote.morir()})
+ 	game.onCollideDo(monigote,{e => monigote.position(monigote.posicionVieja())}) 	
+  	game.onCollideDo(monigote, {e => monigote.morir()})
   	game.onTick(250, "mover malos", { jogo.malos().forEach({e => e.mover()}) })
   	game.start()
 
