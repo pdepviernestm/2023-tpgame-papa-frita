@@ -34,6 +34,9 @@ class bloque {
 	
 	method subir() {position = position.up(1)} 
 	
+	method chocar(){
+		monigote.volver()
+	}
 }
 
 object tablero {
@@ -116,6 +119,8 @@ object monigote {
 	
 	method sonido() = skin.sonidos().anyOne()
 	
+	method volver() = monigote.position(monigote.posicionVieja()
+	
 	method noBloque(posicion) {
 		return not(game.getObjectsIn(posicion).contains("bloque"))
 	}
@@ -193,6 +198,9 @@ class malo {
 			position = movimiento
 		} 
 	}
+	method chocar(){
+		monigote.morir()
+	}
 	
 }
 
@@ -239,8 +247,7 @@ program bombita {
   	keyboard.d().onPressDo({monigote.derecha()})
   		
   	
- 	game.onCollideDo(monigote,{e => monigote.position(monigote.posicionVieja())}) 	
-  	game.onCollideDo(monigote, {e => monigote.morir()})
+  	game.onCollideDo(monigote, {e => e.chocar()})
   	game.onTick(250, "mover malos", { jogo.malos().forEach({e => e.mover()}) })
   	game.start()
 
