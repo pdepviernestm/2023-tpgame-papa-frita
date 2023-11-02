@@ -8,7 +8,6 @@ object monigote {
 	var property position = game.origin()
 	var property posicionVieja= position
 	var property maxBombas = 1
-	var property puntos = 0
 	
 	method image() = skin.monigote()
 	

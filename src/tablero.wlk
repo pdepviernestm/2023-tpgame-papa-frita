@@ -1,6 +1,7 @@
 import wollok.game.*
 import personaje.*
 import items.*
+import skin.*
 
 object coordenadasLibres {
 	var property coords = []
@@ -34,7 +35,7 @@ class bloque {
 	
 	method position() = position
 	
-	method image() = "indestructible.png"
+	method image() = skin.bloqueIndestructible()
 	
 	method chocar() {
 		return monigote.volver()
@@ -47,7 +48,7 @@ class bloque {
 class bloqueRompible inherits bloque {
 		
 	
-	method image() = "roca.jpg"
+	method image() = skin.bloqueRompible()
 	
 	override method morirPorBomba () {
 		if ([1..10].flatten().anyOne() > 6) { 
@@ -82,8 +83,6 @@ object tablero {
 			}
 		)
 	}
-	
-	
 	
 	method crearBloque() {
 		
@@ -125,9 +124,7 @@ object tablero {
 		a=0
 		15.times({e => self.agregarBloqueEnCoordenada(a,15)
 			a+=1
-		})
-		
-		
+		})		
 	}
 	
 	method crearBloquesRompibles() {

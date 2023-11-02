@@ -44,9 +44,7 @@ class bomba {
 	}
 	
 	method chocar() { }
-	
 	method morir() { }
-	method morirPorBomba(){}
+	method morirPorBomba() { }
 
-	
 }

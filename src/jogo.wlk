@@ -2,6 +2,7 @@ import wollok.game.*
 import skin.*
 import personaje.*
 import tablero.*
+import menu.*
 
 class malo {
 		
@@ -37,15 +38,26 @@ class malo {
 	}
 	
 	method morirPorBomba() {
-		game.removeVisual(self)
+		cantidadPuntos.cantidad(cantidadPuntos.cantidad() + 5)
+		if (jogo.malos().size() <= 1) {
+			game.clear()
+			game.addVisual(pantallaFinal)
+			game.addVisual(arrancarDeNuevo)
+			keyboard.r().onPressDo({{game.stop()}})
+		} else {
+			game.removeVisual(self)
+		}
 	}
 }
 
-object nuevoFondo {
-	
-	method image() = "menu.png"
+object pantallaFinal {
+	method image() = skin.pantallaFinal()
 	method position() = game.origin()
-	method chocar(){}
+}
+
+object arrancarDeNuevo {
+	method image() = skin.cartelFinal()
+	method position() = game.origin()
 }
 
 object jogo {
@@ -61,7 +73,7 @@ object jogo {
 	
 	method iniciarNivel() {
   		15.times({e => malos.add(new malo()) })
-  		malos.forEach({b => game.addVisual(b)})
+  		malos.forEach({m => game.addVisual(m)})
   		game.addVisualCharacter(monigote)
 	}
 	

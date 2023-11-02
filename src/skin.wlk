@@ -14,9 +14,15 @@ object skin {
 	var property mensajeMuerteBomba = "troll.png"
 	var property item = "item.png"
 	var property item2 = "item2.png"
+	var property reloj = "reloj.png"
+	var property pantallaFinal = "destruido.png"
+	var property cartelFinal = "cartelFinal.png"
+	var property fondoMenu = "menu.png"
+	var property bloqueIndestructible = "indestructible.png"
+	var property bloqueRompible = "bloqueRompible.jpg"
 	
 	method setSkin(nombre) {
-		skin = nombre + "/"
+		skin = "img/" + nombre + "/"
 		sonidos = sonidos.map({e => (skin + "/sonidos/" + e + ".mp3")})
 		enemigos = enemigos.map({e => (skin  + e)})
 		explosion = skin + explosion
@@ -28,6 +34,12 @@ object skin {
 		sonidoMuerte = skin + "/sonidos/" + sonidoMuerte
 		item = skin + item	
 		item2 = skin + item2
+		reloj = skin + reloj
+		pantallaFinal = skin + pantallaFinal
+		cartelFinal = skin + cartelFinal
+		fondoMenu = skin + fondoMenu
+		bloqueIndestructible = skin + bloqueIndestructible
+		bloqueRompible = skin + bloqueRompible
 	}
 	
 }
