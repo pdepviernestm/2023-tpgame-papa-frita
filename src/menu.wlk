@@ -69,7 +69,7 @@ object menu {
 		const fondoMenu = new Cartel(image = skin.fondoMenu())
 		
 		game.clear()
-		game.title("milei en el banco central simulator")
+		game.title("Milei en el Banco Central Simulator")
 		game.width(18)
   		game.height(15)
   		game.cellSize(60)
