@@ -2,8 +2,9 @@ import personaje.*
 import wollok.game.*
 import skin.*
 import menu.*
+import tablero.*
 
-class item {
+class Item {
 	var property position
 
 	method image()
@@ -17,13 +18,20 @@ class item {
 	method morirPorBomba() {
 		game.removeVisual(self)
 	}
+	
+	method agregarItem() {
+		game.schedule(1000, {
+			game.addVisual(self)
+			}
+		)
+	} 
 }
 
-class ayuda inherits item {
+class Ayuda inherits Item {
 	
-	method image() = skin.item()
+	override method image() = skin.item()
 	
-	method chocar() {
+	override method chocar() {
 		var maxBombas = monigote.maxBombas()
 		cantidadAyudas.cantidad(cantidadAyudas.cantidad()+1)
 		monigote.maxBombas(maxBombas+1)
@@ -32,11 +40,11 @@ class ayuda inherits item {
 
 }
 
-class puntos inherits item {
+class Puntos inherits Item {
 	
-	method image() = skin.item2()
+	override method image() = skin.item2()
 	
-	method chocar() {
+	override method chocar() {
 		cantidadPuntos.cantidad(cantidadPuntos.cantidad()+20) 
 		game.removeVisual(self)
 	}

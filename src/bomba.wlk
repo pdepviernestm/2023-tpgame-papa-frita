@@ -3,7 +3,7 @@ import skin.*
 import personaje.*
 import jogo.*
 
-class explosion {
+class Explosion {
 	var property position
 	method image() = skin.explosion()
 	
@@ -19,7 +19,7 @@ class explosion {
 	method morirPorBomba(){}
 }
 
-class bomba {
+class Bomba {
 	
 	var property tiempoEnExplotar = 2000 // en ms
 	var property position = monigote.position()
@@ -34,11 +34,11 @@ class bomba {
 	method explotar() {
 		game.removeVisual(self)
 		jogo.bombas().remove(self)
-		explosiones.add(new explosion(position = position))
-		explosiones.add(new explosion(position = position.up(1)))
-		explosiones.add(new explosion(position = position.down(1)))
-		explosiones.add(new explosion(position = position.left(1)))
-		explosiones.add(new explosion(position = position.right(1)))		
+		explosiones.add(new Explosion(position = position))
+		explosiones.add(new Explosion(position = position.up(1)))
+		explosiones.add(new Explosion(position = position.down(1)))
+		explosiones.add(new Explosion(position = position.left(1)))
+		explosiones.add(new Explosion(position = position.right(1)))		
 	
 		explosiones.forEach({e => e.generarExplosion()})	
 	}

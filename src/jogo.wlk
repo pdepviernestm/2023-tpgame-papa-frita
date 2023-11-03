@@ -4,7 +4,7 @@ import personaje.*
 import tablero.*
 import menu.*
 
-class malo {
+class Malo {
 		
 	var position = self.asignarPosicion()
 	const imagen = skin.enemigos().anyOne()
@@ -28,7 +28,7 @@ class malo {
 		
 		// Solo se mueve en una direccion en caso de que en esa direccion no haya nada o
 		// este el personaje
-		if (game.getObjectsIn(movimiento).isEmpty() || game.getObjectsIn(movimiento) == [monigote]) {
+		if (game.getObjectsIn(movimiento).isEmpty() || game.getObjectsIn(movimiento).contains(monigote)) {
 			position = movimiento
 		} 
 	}
@@ -40,6 +40,8 @@ class malo {
 	method morirPorBomba() {
 		cantidadPuntos.cantidad(cantidadPuntos.cantidad() + 5)
 		if (jogo.malos().size() <= 1) {
+			var pantallaFinal = new Cartel(image = skin.pantallaFinal())
+			var arrancarDeNuevo = new Cartel(image = skin.cartelFinal())
 			game.clear()
 			game.addVisual(pantallaFinal)
 			game.addVisual(arrancarDeNuevo)
@@ -50,15 +52,10 @@ class malo {
 	}
 }
 
-object pantallaFinal {
-	method image() = skin.pantallaFinal()
+class Cartel {
+	var property image
 	method position() = game.origin()
-}
-
-object arrancarDeNuevo {
-	method image() = skin.cartelFinal()
-	method position() = game.origin()
-}
+} 
 
 object jogo {
   	var property malos = []
@@ -72,7 +69,7 @@ object jogo {
 	}
 	
 	method iniciarNivel() {
-  		15.times({e => malos.add(new malo()) })
+  		15.times({e => malos.add(new Malo()) })
   		malos.forEach({m => game.addVisual(m)})
   		game.addVisualCharacter(monigote)
 	}

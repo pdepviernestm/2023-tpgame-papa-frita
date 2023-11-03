@@ -17,31 +17,31 @@ object monigote {
 	
 	method volver() = self.position(self.posicionVieja())
 	
-	method arriba() {
+	method movimiento() {
 		posicionVieja= position
-		position = position.up(1)
-		game.sound(self.sonido()).play()		
-			
+		game.sound(self.sonido()).play()
+	}
+	
+	method arriba() {
+		self.movimiento()
+		position = position.up(1)	
 	} 
 	method abajo() {
-		posicionVieja= position
+		self.movimiento()
 		position = position.down(1)		
-		game.sound(self.sonido()).play()	
 	} 
 	method izquierda() {
-		posicionVieja= position
+		self.movimiento()
 		position = position.left(1)		
-		game.sound(self.sonido()).play()		
 	} 
 	method derecha() {
-		posicionVieja= position
+		self.movimiento()
 		position = position.right(1)	
-		game.sound(self.sonido()).play()
 	} 
 	
 	method ponerBomba() {
 		if (jogo.bombas().size() < maxBombas) {
-			var nuevaBomba = new bomba()
+			var nuevaBomba = new Bomba()
 			jogo.bombas().add(nuevaBomba)
 			nuevaBomba.colocar()
 		}

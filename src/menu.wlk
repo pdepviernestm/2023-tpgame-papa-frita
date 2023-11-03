@@ -7,8 +7,8 @@ import items.*
 
 object hud {	
 	method iniciarHud() {
-		var ayuda = new ayuda(position = game.at(16,13))
-		var puntos = new puntos(position = game.at(16,12))
+		const ayuda = new Ayuda(position = game.at(16,13))
+		const puntos = new Puntos(position = game.at(16,12))
 		tiempo.correrTiempo()
 		game.addVisual(ayuda)
 		game.addVisual(puntos)
@@ -23,7 +23,6 @@ object fondoMenu {
 	
 	method image() = skin.fondoMenu()
 	method position() = game.origin()
-	method chocar(){}
 }
 
 object reloj {
@@ -36,7 +35,7 @@ object tiempo {
     var property position = game.at(17, 14)
     
     method correrTiempo() {
-    	game.onTick(1000, "incrementarTiempo", {=> tiempo += 1})
+    	game.onTick(1000, "incrementarTiempo", {=> if (monigote.vivo()) tiempo += 1})
     }
         
 	method text() = tiempo.toString()	
@@ -66,17 +65,21 @@ object menu {
 	var ready = false
 	
 	method menucito() {
+  		skin.setSkin("milei")
+		const fondoMenu = new Cartel(image = skin.fondoMenu())
+		
 		game.clear()
 		game.title("milei en el banco central simulator")
 		game.width(18)
   		game.height(15)
   		game.cellSize(60)
-  		skin.setSkin("milei")
   		game.addVisual(fondoMenu)
+  		//game.addVisual(fondoMenu)
   		game.boardGround(skin.fondo())
   		keyboard.f().onPressDo({
   			if (not ready) {
-  				menu.arrancar()
+				game.removeVisual(fondoMenu)
+  				self.arrancar()
   				ready = true
   			}
   		})	
@@ -86,7 +89,6 @@ object menu {
 		jogo.generarLayout()
 		jogo.iniciarNivel()
 		hud.iniciarHud()
-		game.removeVisual(fondoMenu)
 		keyboard.w().onPressDo({if (monigote.vivo()) monigote.arriba()})
 		keyboard.s().onPressDo({if (monigote.vivo())  monigote.abajo()})
 		keyboard.a().onPressDo({if (monigote.vivo())  monigote.izquierda()})

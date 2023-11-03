@@ -3,7 +3,7 @@ import wollok.game.*
 object skin {
 	
 	var property skin
-	var property sonidos = [1..10].flatten()
+	var property sonidos = (1..10)
 	var property enemigos = ["enemigo1.png", "enemigo2.png", "enemigo3.png", "enemigo4.png"]
 	var property monigote = "monigote.png"
 	var property fondo = "pisoasfalto.png"

@@ -7,4 +7,3 @@ program bombita {
 	game.start()
 			
 }
-
